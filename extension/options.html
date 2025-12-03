@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MixEn Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 16px; color: #222; }
+    h1 { font-size: 18px; }
+    section { margin-bottom: 16px; }
+    label { display: block; margin: 8px 0; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    input[type="range"] { width: 240px; }
+    textarea { width: 100%; min-height: 80px; font-family: ui-monospace, Menlo, monospace; }
+    .btns { display: flex; gap: 8px; }
+    small { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>MixEn Options</h1>
+
+  <section>
+    <label class="row">
+      <input type="checkbox" id="enabled"> Enable on all sites by default
+    </label>
+    <label>
+      Replacement ratio: <span id="ratioVal">15%</span>
+      <div class="row">
+        <input type="range" id="ratio" min="5" max="50" step="1" value="15">
+      </div>
+      <small>Fraction of eligible words to replace. Lower = lighter.</small>
+    </label>
+  </section>
+
+  <section>
+    <label class="row">
+      <input type="checkbox" id="onlyNouns" checked> Only replace nouns
+    </label>
+    <small>Uses dictionary POS when available; falls back to heuristic if missing.</small>
+  </section>
+
+  <section>
+    <div>Per-site Control</div>
+    <label>Disabled URL patterns (one per line):</label>
+    <textarea id="blacklist" placeholder="*.example.com\nhttps://news.example.com/*"></textarea>
+    <small>
+      Default is ON for all pages. Any URL matching these patterns will be disabled.<br/>
+      Wildcards: <code>*</code> for any sequence, <code>?</code> for a single char. Match is against the full URL (case-insensitive).
+    </small>
+  </section>
+
+  <section class="btns">
+    <button id="save">Save</button>
+    <button id="reset">Reset Defaults</button>
+  </section>
+
+  
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build artifacts
+dist/
+extension/content.js
+extension/options.js
+extension/*.map
+extension/data/
+export/
+
+# OS / Editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Archives
+*.zip
+*.tar
+*.tgz
+*.gz
+*.bz2
+

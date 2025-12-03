@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "MixEn - Chinese→English chaos bringer",
+  "description": "Randomly replaces a fraction of Chinese words with English equivalents.",
+  "version": "0.1.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles/tooltip.css"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "data/index.json",
+        "data/chunks/*.json"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
