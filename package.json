@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node tools/build_dict.js --dbnary https://kaiko.getalp.org/static/ontolex/latest/zh_dbnary_ontolex.ttl.bz2 --proper tools/seeds/proper_seeds.tsv && node tools/build_ts.js",
+    "build": "node tools/build_dict.js --dbnary https://kaiko.getalp.org/static/ontolex/latest/zh_dbnary_ontolex.ttl.bz2 && node tools/build_ts.js",
     "build:ts": "node tools/build_ts.js",
     "build:dev": "node tools/build_ts.js --dev",
     "build:prod": "node tools/build_ts.js"

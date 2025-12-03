@@ -39,7 +39,6 @@ const MAX_LEN = parseInt(argVal('--maxLen','4'),10);
 const MAX_SENSES = parseInt(argVal('--maxSenses','2'),10);
 const AWL_SRC = argVal('--awl','');
 const NGSL_SRC = argVal('--ngsl','');
-const PROPER_SEEDS = argVal('--proper','');
 const USE_WORDNET = !hasFlag('--noWordNet');
 const DEFAULT_TAG = argVal('--defaultTag','common'); // for lightweight fallback
 
@@ -143,23 +142,6 @@ async function loadWordSet(name, src){
 function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 // Filtering removed by request: no blocklist at build time.
 
-async function loadProperSeeds(src){
-  if(!src) return new Map();
-  try{
-    const txt = await readTextMaybeUrl(src);
-    const map = new Map();
-    for(const line of txt.split(/\r?\n/)){
-      const s = line.trim(); if(!s || s.startsWith('#')) continue;
-      const parts = s.split(/\t+/);
-      if(parts.length>=2){
-        const zh = parts[0].trim(); const en = parts[1].trim();
-        if(zh && en) map.set(zh, en);
-      }
-    }
-    console.log('Loaded proper seeds:', map.size);
-    return map;
-  }catch(e){ console.warn('Failed to load proper seeds:', e.message); return new Map(); }
-}
 
 function parseCedictLine(line){
   // Format: trad simp [pinyin] /sense1/sense2/
@@ -232,7 +214,6 @@ async function main(){
 
   const groups = new Map(); // gid -> {entries: Map(word->obj), maxLen}
   const { nounSet, exc } = loadWordNetNouns();
-  const properSeeds = await loadProperSeeds(PROPER_SEEDS);
   let kept = 0, seen = 0;
 
   for(const line of txt.split(/\r?\n/)){
@@ -263,24 +244,8 @@ async function main(){
       if(dbnaryNouns.has(e.simp) || dbnaryNouns.has(e.trad)) pos = 'n';
     }
 
-  // Proper noun override from seeds (respect filters: single-token, no hyphen, not capitalized)
-  let proper = false;
-  if(properSeeds.size && (properSeeds.has(e.simp) || properSeeds.has(e.trad))){
-    const enCanon = properSeeds.get(e.simp) || properSeeds.get(e.trad);
-    const ok = enCanon && !/\s/.test(enCanon) && !enCanon.includes('-') && !/^[A-Z]/.test(enCanon);
-    if(ok){
-      // put at front if not already
-      const enList = e.en.slice();
-      if(!enList.includes(enCanon)) enList.unshift(enCanon);
-      e.en = enList;
-      pos = 'n';
-      proper = true;
-    }
-  }
-
     const val = { en: e.en, py: e.py, tag };
     if(pos) val.pos = pos;
-    if(proper) val.proper = true;
     if(!groups.has(gid)) groups.set(gid, { entries: new Map(), maxLen: 0 });
     const g = groups.get(gid);
     g.entries.set(e.simp, val);
